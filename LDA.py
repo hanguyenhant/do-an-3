@@ -13,26 +13,18 @@ class LDA:
 	def create_dictionary(self):
 		self._dictionary = corpora.Dictionary(self._data)
 		self._dictionary.filter_extremes(no_below=10, no_above=.9)
-		# print(dictionary)
 
 	def implement_lda(self):
-		corpus = [self._dictionary.doc2bow(doc) for doc in self._data]
-		# print(corpus[6])
-		model = gensim.models.LdaModel(corpus,
-								id2word=self._dictionary,
-								num_topics=10,
-								passes=10,
-								iterations=100,
-								decay=0.7,
-								offset=10.1)
-		topics = model.show_topics(num_topics=10, num_words=10, formatted=False)
-		for topic_index, term_list in topics:
-			print('\ntopic {}\n'.format(topic_index+1))
-			for term, value in term_list:
-				print(term)
+		doc_term_matrix = [self._dictionary.doc2bow(doc) for doc in self._data]
+
+		Lda = gensim.models.ldamodel.LdaModel
+
+		ldamodel = Lda(doc_term_matrix, num_topics=8, id2word = self._dictionary, passes=50)
+
+		print(ldamodel.print_topics(num_topics=8, num_words=5))
+
 	
 lda = LDA()
 lda.load_data('clean_data.txt')
-# print(lda._data[:10])
 lda.create_dictionary()
 lda.implement_lda()
